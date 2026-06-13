@@ -35,8 +35,8 @@ fi
 echo ">> refreshing marketplace $MARKETPLACE_NAME from source"
 claude plugin marketplace update "$MARKETPLACE_NAME"
 
-echo ">> updating $PLUGIN_NAME (scope: $SCOPE)"
-claude plugin update "$PLUGIN_NAME" --scope "$SCOPE"
+echo ">> updating $PLUGIN_NAME@$MARKETPLACE_NAME (scope: $SCOPE)"
+claude plugin update "$PLUGIN_NAME@$MARKETPLACE_NAME" --scope "$SCOPE"
 
 cat <<'NEXT'
 

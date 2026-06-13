@@ -44,7 +44,7 @@ This repo is structured as a Claude Code marketplace. From any Claude Code sessi
 To install a specific version once a tag exists:
 
 ```
-/plugin marketplace add kherrala/claude-javapaavi@v0.1.0
+/plugin marketplace add kherrala/claude-javapaavi@v0.2.0
 ```
 
 To uninstall:

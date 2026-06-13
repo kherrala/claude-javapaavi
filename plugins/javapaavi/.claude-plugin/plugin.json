@@ -9,10 +9,7 @@
     "url": "https://github.com/kherrala"
   },
   "homepage": "https://github.com/kherrala/claude-javapaavi",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/kherrala/claude-javapaavi"
-  },
+  "repository": "https://github.com/kherrala/claude-javapaavi",
   "keywords": [
     "java", "spring", "spring-boot", "spring-data-jpa",
     "testing", "junit5", "mockito", "mockk", "assertj",

@@ -5,21 +5,40 @@
 `javapaavi` ("Java Petri" in Finnish) is a single-plugin Claude Code marketplace that distils ~290 long-form blog posts into a compact, opinionated coding agent. It ships:
 
 - one **agent** — `javapaavi`, an old-school senior Java engineer with strong, well-defended opinions on testing, Spring, and clean code;
-- four **skills** that practise what he preaches:
+- five **skills** that practise what he preaches:
   - `automated-testing` — JUnit 5, AssertJ, MockMvcTester, Testcontainers, test doubles, test data builders.
   - `spring-framework` — Spring Boot, Spring Data JPA, Spring MVC, profiles, DTOs vs entities, transactions.
   - `java-programming` — Java idioms, domain modelling, builders, Maven/Gradle hygiene.
-  - `convention-audit` — autonomous or interactive project audit against the three skills above. Interactive mode asks clarifying questions in the **Savo dialect of Finnish**.
+  - `software-architecture` — the three-layer (web → service → repository) reference architecture, layer boundaries, the anaemic-domain-model flaw, DDD building blocks, monolith vs microservices/SOA, reusability/YAGNI, Just-Enough-Up-Front design.
+  - `convention-audit` — autonomous or interactive project audit against the four skills above (conventions **and** architecture). Interactive mode asks clarifying questions in the **Savo dialect of Finnish**.
 
 The agent will push back politely but firmly on field injection, leaky entities, mocked databases, and tests that assert on framework behaviour.
 
 ## Install
+
+### Quick install (scripts)
+
+If you have the `claude` CLI on your PATH, the helper scripts do the marketplace
+add + plugin install for you:
+
+```
+./scripts/setup.sh              # install from GitHub
+./scripts/setup.sh --local      # install from this checkout (local development)
+./scripts/upgrade.sh            # pull the latest version
+./scripts/uninstall.sh          # remove the plugin and its marketplace
+```
+
+After any of these, **run `/reload-plugins` in a running Claude Code session**
+(or restart it) to apply the change. Verify with `claude plugin list`.
+
+### Manual install (slash commands)
 
 This repo is structured as a Claude Code marketplace. From any Claude Code session:
 
 ```
 /plugin marketplace add kherrala/claude-javapaavi
 /plugin install javapaavi@javapaavi-marketplace
+/reload-plugins
 ```
 
 To install a specific version once a tag exists:
@@ -33,6 +52,7 @@ To uninstall:
 ```
 /plugin uninstall javapaavi
 /plugin marketplace remove javapaavi-marketplace
+/reload-plugins
 ```
 
 ## What you can ask it
@@ -68,10 +88,14 @@ After installing, drop into a Java/Spring project and try things like:
 │       │   ├── automated-testing/SKILL.md
 │       │   ├── spring-framework/SKILL.md
 │       │   ├── java-programming/SKILL.md
+│       │   ├── software-architecture/SKILL.md
 │       │   └── convention-audit/SKILL.md
 │       └── reference/
 │           └── README.md         # explains why the corpus is NOT in this repo
 ├── scripts/
+│   ├── setup.sh                  # install the plugin via the claude CLI
+│   ├── upgrade.sh                # update an installed plugin
+│   ├── uninstall.sh              # remove the plugin + marketplace
 │   ├── scrape_blog.py            # download the blog (does NOT commit to repo)
 │   └── refresh.sh                # convenience wrapper: scrape + re-distill prompt
 ├── LICENSE
@@ -92,7 +116,7 @@ python3 -m venv .venv
 .venv/bin/python scripts/scrape_blog.py --out plugins/javapaavi/reference/posts
 
 # 3. Open this repo in Claude Code and ask:
-#    "Refresh the four javapaavi skills from the reference/ corpus,
+#    "Refresh the five javapaavi skills from the reference/ corpus,
 #     biasing toward post-2022 content and noting where his thinking has
 #     evolved."
 ```

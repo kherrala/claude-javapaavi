@@ -1,11 +1,11 @@
 ---
 name: convention-audit
-description: Audit a Java / Spring / Kotlin project against the javapaavi conventions (constructor injection, DTOs at boundaries, Testcontainers over H2, AssertJ, MockMvcTester, no field-injection, no test inheritance, no production-code-as-test-data-seed, etc.). Two modes — `autonomous` (silent scan, written report) and `interactive` (asks clarifying questions in Savo-Finnish dialect before judging). Use whenever the user asks for a code review of conventions, an audit, a "are we doing this the right way" check, or a "katsotaanpa onko homma kunnossa".
+description: Audit a Java / Spring / Kotlin project against the javapaavi conventions (constructor injection, DTOs at boundaries, Testcontainers over H2, AssertJ, MockMvcTester, no field-injection, no test inheritance, no production-code-as-test-data-seed, etc.) AND its architecture (three-layer web→service→repository structure, layer-boundary integrity, anaemic-domain-model / god-service smells, speculative reuse, premature microservices). Two modes — `autonomous` (silent scan, written report) and `interactive` (asks clarifying questions in Savo-Finnish dialect before judging). Use whenever the user asks for a code review of conventions, an architecture review, an audit, a "are we doing this the right way" check, or a "katsotaanpa onko homma kunnossa".
 ---
 
 # Convention audit — javapaavi
 
-You audit a project against the opinions encoded in the sibling skills `automated-testing`, `spring-framework`, and `java-programming`. You have two modes — pick deliberately, never both at once.
+You audit a project against the opinions encoded in the sibling skills `automated-testing`, `spring-framework`, `java-programming`, and `software-architecture`. You have two modes — pick deliberately, never both at once.
 
 ## Picking the mode
 
@@ -30,6 +30,7 @@ You scan, you decide, you report. No questions to the user.
 3. **Spring entry points**: any class annotated `@SpringBootApplication`, `@Configuration`, `@RestController`, `@Service`, `@Repository`. Sample 5–10 of each at most — don't open the whole tree.
 4. **`application*.yml` / `application*.properties`** and any `Profiles` class.
 5. **Domain model**: pick 3–5 entity classes (`@Entity` or POJOs in a `domain/`, `model/`, or `entity/` package) and read them in full.
+6. **Package / module layout** (only when auditing architecture): `ls` the top-level package tree and any multi-module `settings.gradle*` / parent `pom.xml`. Trace one controller → service → repository call chain in full to judge layer-boundary integrity.
 
 Cap the scan: **don't open more than ~40 files** in a single audit. If the project is bigger, sample by package; flag in the report that the sample was partial.
 
@@ -83,9 +84,23 @@ Run these checks, in order:
 - Java version below 17 on a new project → **warning**.
 
 **Domain model**
-- `@Entity` classes with `@Setter` on every field (Lombok) and no domain methods → **warning** (anaemic model).
-- Service classes named `XService` doing more than one entity's work and >300 lines → **warning** (SRP).
-- `public` setters on aggregate root fields that have invariants → **warning**.
+- `@Entity` classes with `@Setter` on every field (Lombok) and no domain methods → **warning** (anaemic model — `the-biggest-flaw-of-spring-web-applications`).
+- Service classes named `XService` doing more than one entity's work and >300 lines → **warning** (SRP — `the-biggest-flaw-of-spring-web-applications`).
+- `public` setters on aggregate root fields that have invariants → **warning** (`thefive-characteristics-of-a-good-domain-model`).
+
+**Architecture (structure & boundaries)** — *include these only when the scope is "conventions + architecture" or "everything"; skip on a conventions-only pass. All cite the `software-architecture` skill.*
+- A layer reaching **upward** — a `@Service` / repository importing or depending on a web-layer type (`@RestController`, a `*Controller`, an MVC type) → **blocker** (`understanding-spring-web-application-architecture-the-classic-way`).
+- A `@RestController` calling a `@Repository` / `*Repository` **directly**, skipping the service layer → **warning** (layer skipped).
+- A JPA `@Entity` used as a `@RequestBody`/return type at the web boundary → **blocker** (already flagged under Boundary integrity; record once, tag as architecture).
+- More than three structural layers between controller and repository (e.g. `controller → facade → manager → service → repository`) with no justification → **warning** (KISS — every layer has a price).
+- Business logic in the service layer that operates on an anaemic entity's fields (entity is all getters/setters; the rule lives in `XService`) → **warning** (`the-biggest-flaw-of-spring-web-applications`).
+- An "application service" (orchestration/`@Transactional` entry point) that contains branching business rules rather than delegating to the domain → **warning** (application vs. domain service — `domain-driven-design-revisited`).
+- A generic/"reusable" abstraction (`Abstract*`, `Generic*Service`, type-parameterised CRUD base) with a **single** concrete user → **nit** (speculative reuse — `reusability-is-overrated`).
+- A service `interface` with exactly one implementation and no second caller/test-double need → **nit** (YAGNI; defer to Extract Interface — cross-refs `java-programming`).
+- A multi-module / multi-service split (separate deployables, `*-service` modules talking over HTTP) where the modules share one database schema or one domain vocabulary → **warning** (distributed monolith — `the-microservice-architecture-sounds-like-service-oriented-architecture`).
+- Package structure organised purely by technical layer (`controllers/`, `services/`, `repositories/`) with no feature/domain grouping in a large codebase → **nit** (modules reduce cognitive load — `domain-driven-design-revisited`).
+
+> When you can't tell *why* a structural choice was made from the code alone, don't guess a verdict — note it and, in autonomous mode, add the "five whys" question to the "I would have asked" section (`code-reviews-with-five-whys`).
 
 ### Producing the report
 
@@ -245,7 +260,7 @@ End the report with one line in Savo as a sign-off, e.g. *"No siinähän se, san
 - It does **not** edit files. Audit only. If the user wants fixes, suggest "want me to apply these as patches?" at the end of the report and wait for confirmation.
 - It does **not** judge style choices the codebase already commits to (Lombok vs. plain Java, AssertJ vs. Hamcrest *in legacy tests*). Flag misalignments with javapaavi principles, but respect codebase conventions that aren't violations.
 - It does **not** open issues, post comments, or push branches.
-- It does **not** invent rules. If a finding doesn't trace back to one of the sibling skills (automated-testing / spring-framework / java-programming), don't report it — or report it under a clearly-marked "outside-javapaavi" section.
+- It does **not** invent rules. If a finding doesn't trace back to one of the sibling skills (automated-testing / spring-framework / java-programming / software-architecture), don't report it — or report it under a clearly-marked "outside-javapaavi" section.
 
 ## Trigger words you should recognise
 

@@ -21,7 +21,7 @@ cat <<'NEXT'
 Corpus refreshed. Next step:
   Open this repo in Claude Code and ask the assistant to:
 
-    "Refresh the three javapaavi skills from the reference/posts/ corpus.
+    "Refresh the five javapaavi skills from the reference/posts/ corpus.
      Bias toward post-2022 content and explicitly note where Petri's
      thinking has evolved versus older posts."
 

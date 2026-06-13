@@ -23,6 +23,8 @@ If the user hasn't said which mode they want, **don't ask** — pick by the sign
 
 You scan, you decide, you report. No questions to the user.
 
+**Default scope = conventions + architecture.** A plain "audit this project" runs *both* the convention rules and the architecture checks. Drop the architecture block (discovery step 6 and the "Architecture" rule block) **only** when the user explicitly asks for a conventions-only or quick/fast pass (e.g. "just the conventions", "quick scan", "pelkät konventiot", "nopee skannaus").
+
 ### Discovery — what to look at (in order)
 
 1. **Build files**: `pom.xml`, `build.gradle`, `build.gradle.kts`, `settings.gradle*`. Read them in full.
@@ -30,7 +32,7 @@ You scan, you decide, you report. No questions to the user.
 3. **Spring entry points**: any class annotated `@SpringBootApplication`, `@Configuration`, `@RestController`, `@Service`, `@Repository`. Sample 5–10 of each at most — don't open the whole tree.
 4. **`application*.yml` / `application*.properties`** and any `Profiles` class.
 5. **Domain model**: pick 3–5 entity classes (`@Entity` or POJOs in a `domain/`, `model/`, or `entity/` package) and read them in full.
-6. **Package / module layout** (only when auditing architecture): `ls` the top-level package tree and any multi-module `settings.gradle*` / parent `pom.xml`. Trace one controller → service → repository call chain in full to judge layer-boundary integrity.
+6. **Package / module layout** (default; skip only on a conventions-only / quick pass): `ls` the top-level package tree and any multi-module `settings.gradle*` / parent `pom.xml`. Trace one controller → service → repository call chain in full to judge layer-boundary integrity.
 
 Cap the scan: **don't open more than ~40 files** in a single audit. If the project is bigger, sample by package; flag in the report that the sample was partial.
 
@@ -88,7 +90,7 @@ Run these checks, in order:
 - Service classes named `XService` doing more than one entity's work and >300 lines → **warning** (SRP — `the-biggest-flaw-of-spring-web-applications`).
 - `public` setters on aggregate root fields that have invariants → **warning** (`thefive-characteristics-of-a-good-domain-model`).
 
-**Architecture (structure & boundaries)** — *include these only when the scope is "conventions + architecture" or "everything"; skip on a conventions-only pass. All cite the `software-architecture` skill.*
+**Architecture (structure & boundaries)** — *run these by default; skip only when the user explicitly asked for a conventions-only or quick/fast pass. All cite the `software-architecture` skill.*
 - A layer reaching **upward** — a `@Service` / repository importing or depending on a web-layer type (`@RestController`, a `*Controller`, an MVC type) → **blocker** (`understanding-spring-web-application-architecture-the-classic-way`).
 - A `@RestController` calling a `@Repository` / `*Repository` **directly**, skipping the service layer → **warning** (layer skipped).
 - A JPA `@Entity` used as a `@RequestBody`/return type at the web boundary → **blocker** (already flagged under Boundary integrity; record once, tag as architecture).
@@ -114,6 +116,7 @@ Output a Markdown report directly to the user. Structure:
 - Warnings:  <n>
 - Nits:      <n>
 - Scanned:   <n files>, sample-based: yes/no
+- Scope:     conventions + architecture  (or: conventions only)
 
 ## Findings
 
@@ -241,11 +244,11 @@ Pick 3–5 from this catalogue based on what your quick scan **didn't** clear up
 
 #### Scope guard
 
-> **"Kuinka syvällise auditin haluat? Auditin laajuus rajottaa myös aikaa."**
+> **"Kuinka syvällise auditin haluat? Oletukseno kahotaan sekä konventiot että arkkitehtuuri."**
 > Options:
-> - "Pelekkä konventiot — nopee skannaus"
-> - "Konventiot + arkkitehtuuri (kerrokset, DTOt)"
-> - "Kaikki kuvioissa — buildit, testit, domain, kaikki"
+> - "Konventiot + arkkitehtuuri (kerrokset, DTOt) — oletus, niinkun pittää"
+> - "Kaikki kuvioissa — buildit, testit, domain, arkkitehtuuri, kaikki"
+> - "Pelekkä konventiot — nopee skannaus, jätä arkkitehtuuri välliin"
 
 ### After the answers
 

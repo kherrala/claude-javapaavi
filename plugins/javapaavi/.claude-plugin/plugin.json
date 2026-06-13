@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "javapaavi",
+  "version": "0.1.0",
+  "description": "An opinionated Java/Spring/test-automation collaborator. Distilled from ~290 long-form posts by Petri Kainulainen, the plugin ships a senior-engineer agent plus four skills (automated-testing, spring-framework, java-programming, convention-audit) that practice what he preaches: small classes with clear responsibilities, integration-tested data access, no mocking of types you don't own, and a disciplined test-naming convention. The convention-audit skill can also interview the user in Savo Finnish.",
+  "author": {
+    "name": "Kyösti Herrala",
+    "email": "kyosti.herrala@gmail.com",
+    "url": "https://github.com/kherrala"
+  },
+  "homepage": "https://github.com/kherrala/claude-javapaavi",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kherrala/claude-javapaavi"
+  },
+  "keywords": [
+    "java", "spring", "spring-boot", "spring-data-jpa",
+    "testing", "junit5", "mockito", "mockk", "assertj",
+    "kotlin", "clean-code", "tdd", "audit"
+  ],
+  "license": "Apache-2.0"
+}

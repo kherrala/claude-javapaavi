@@ -1,0 +1,37 @@
+javapaavi
+Copyright 2026 Kyösti Herrala
+
+This product includes material derived from petrikainulainen.net,
+operated by Petri Kainulainen, whose blog footer states:
+
+    © 2010–Present Petri Kainulainen
+    (all code samples are licensed under Apache License 2.0)
+
+This repository is licensed under Apache License 2.0 — the same license
+the blog applies to its code samples — for uniform attribution and reuse.
+
+Three kinds of material from the blog reach this repository:
+
+  1. Code snippets — adapted from blog examples or rewritten in their
+     spirit. Used under the blog's stated Apache-2.0 grant, redistributed
+     here under the same Apache-2.0 license, with attribution by post
+     slug + year in the prose around each snippet.
+
+  2. Prose / opinions / principles — short paraphrases of Petri's stated
+     opinions, with explicit attribution by post slug + year next to each
+     claim. No verbatim reproduction of substantial portions of any
+     single article is intended.
+
+  3. The original blog posts themselves — NOT vendored in this repo.
+     The scraper at scripts/scrape_blog.py downloads them to a local
+     cache (plugins/javapaavi/reference/posts/) that is .gitignored and
+     must not be committed. The corpus remains the property of the
+     original author.
+
+Petri Kainulainen is not affiliated with this plugin and has not
+endorsed it. The plugin's recommendations are our paraphrase of his
+stated opinions, not direct quotation, and any error is ours. If Petri
+or his representatives would prefer different terms — for the prose
+distillation or for any specific code adaptation — please open an issue
+at https://github.com/kherrala/claude-javapaavi and we will revise or
+remove.

@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "javapaavi-marketplace",
+  "owner": {
+    "name": "Kyösti Herrala",
+    "email": "kyosti.herrala@gmail.com",
+    "url": "https://github.com/kherrala"
+  },
+  "metadata": {
+    "description": "A one-plugin marketplace that installs `javapaavi` — a Java/Spring/test-automation agent distilled from petrikainulainen.net.",
+    "version": "0.1.0",
+    "homepage": "https://github.com/kherrala/claude-javapaavi"
+  },
+  "plugins": [
+    {
+      "name": "javapaavi",
+      "source": "./plugins/javapaavi",
+      "description": "Opinionated Java engineering agent — Spring Framework, automated testing, clean code, and a project-convention audit (with optional Savo-Finnish interactive mode) — distilled from Petri Kainulainen's blog.",
+      "version": "0.1.0",
+      "category": "development",
+      "tags": ["java", "spring", "spring-boot", "testing", "junit", "spring-data-jpa", "kotlin", "mockk", "convention-audit"],
+      "strict": false,
+      "license": "Apache-2.0"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+# Scraped blog content is for local distillation only — never commit
+# (the original posts are © Petri Kainulainen and live at petrikainulainen.net).
+plugins/javapaavi/reference/posts/
+plugins/javapaavi/reference/raw/
+
+# Python tooling
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Claude Code session artifacts
+.claude/
+.pruner/
